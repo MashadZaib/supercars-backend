@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.schemas.invoice_schema import InvoiceCreate, InvoiceUpdate
-from app.models.invoice import Invoice
+from app.models.invoice_preview import Invoice
 from app.repositories.invoice_repository import InvoiceRepository
 
 class InvoiceService:

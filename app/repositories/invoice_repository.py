@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.invoice import Invoice
+from app.models.invoice_preview import Invoice
 
 class InvoiceRepository:
     def __init__(self, db: Session):
