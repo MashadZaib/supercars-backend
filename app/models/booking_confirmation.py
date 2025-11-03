@@ -1,4 +1,3 @@
-# app/models/booking_confirmation.py
 from sqlalchemy import Column, Integer, String, Date
 from app.core.database import Base
 

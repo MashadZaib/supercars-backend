@@ -7,10 +7,10 @@ class Charge(Base):
     __tablename__ = "charges"
 
     id = Column(Integer, primary_key=True, index=True)
-    invoice_id = Column(Integer, ForeignKey("invoices.id", ondelete="CASCADE"))
+    invoice_id = Column(Integer, ForeignKey("invoice_previews.id", ondelete="CASCADE"))
     charge_name = Column(String(255), nullable=False)
     amount = Column(Numeric(10, 2), nullable=False, default=0)
     qty = Column(Integer, default=1)
     type = Column(String(50), default="Taxable")
 
-    invoice = relationship("Invoice", back_populates="charges")
+    invoice = relationship("InvoicePreview", back_populates="charges")

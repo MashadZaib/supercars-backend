@@ -1,4 +1,3 @@
-# app/schemas/invoice_preview_schema.py
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Dict, Any, Optional
@@ -12,7 +11,17 @@ class InvoicePreviewBase(BaseModel):
     totals: Optional[Dict[str, Any]]
 
 class InvoicePreviewCreate(InvoicePreviewBase):
+    """Schema used for creating a new invoice preview"""
     pass
+
+class InvoicePreviewUpdate(BaseModel):
+    """Schema used for updating an existing invoice preview"""
+    bill_to: Optional[List[Dict[str, Any]]] = None
+    invoice_info: Optional[List[Dict[str, Any]]] = None
+    shipping_details: Optional[List[Dict[str, Any]]] = None
+    container_details: Optional[List[Dict[str, Any]]] = None
+    itemized_charges: Optional[List[Dict[str, Any]]] = None
+    totals: Optional[Dict[str, Any]] = None
 
 class InvoicePreviewRead(InvoicePreviewBase):
     id: int

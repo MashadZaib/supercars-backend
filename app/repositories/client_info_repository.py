@@ -2,7 +2,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.client import Client
 
-class ClientRepository:
+class ClientInfoRepository:
     def __init__(self, db: Session):
         self.db = db
 
@@ -12,11 +12,11 @@ class ClientRepository:
         self.db.refresh(obj)
         return obj
 
-    def get(self, client_id: int) -> Optional[Client]:
-        return self.db.query(Client).filter(Client.id == client_id).first()
-
     def list(self) -> List[Client]:
         return self.db.query(Client).order_by(Client.id.desc()).all()
+
+    def get(self, client_id: int) -> Optional[Client]:
+        return self.db.query(Client).filter(Client.id == client_id).first()
 
     def update(self, db_obj: Client, **changes) -> Client:
         for k, v in changes.items():

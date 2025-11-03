@@ -1,5 +1,6 @@
 # app/models/invoice_preview.py
 from sqlalchemy import Column, Integer, JSON, DateTime, func
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class InvoicePreview(Base):
@@ -13,3 +14,5 @@ class InvoicePreview(Base):
     itemized_charges = Column(JSON, nullable=True)
     totals = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    charges = relationship("Charge", back_populates="invoice_preview", cascade="all, delete-orphan")
