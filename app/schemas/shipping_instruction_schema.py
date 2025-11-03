@@ -6,14 +6,14 @@ class PartyInfo(BaseModel):
     name: Optional[str]
     address: Optional[str]
     phone: Optional[str]
-    contactPerson: Optional[str]
+    contact_person: Optional[str]
     email: Optional[EmailStr] = None
 
 class VehicleInfo(BaseModel):
     make: Optional[str]
     year: Optional[str]
     color: Optional[str]
-    chassisNo: Optional[str]
+    chassis_no: Optional[str]
     length: Optional[str]
     width: Optional[str]
     height: Optional[str]
@@ -21,19 +21,19 @@ class VehicleInfo(BaseModel):
     cc: Optional[str]
 
 class MarksNumbers(BaseModel):
-    containerNo: Optional[str]
-    sealNo: Optional[str]
+    container_no: Optional[str]
+    seal_no: Optional[str]
     size: Optional[str]
     type: Optional[str]
-    noOfPackages: Optional[str]
-    pkgType: Optional[str]
-    cargoWeight: Optional[str]
+    no_of_packages: Optional[str]
+    pkg_type: Optional[str]
+    cargo_weight: Optional[str]
 
 class ShippingInstructionBase(BaseModel):
     type_of_bill_of_lading: Optional[str]
-    shipper: Optional[PartyInfo]
-    consignee: Optional[PartyInfo]
-    notify: Optional[PartyInfo]
+    shipper: Optional[Dict[str, Any]] = None
+    consignee: Optional[Dict[str, Any]] = None
+    notify: Optional[Dict[str, Any]] = None
     vessel: Optional[str]
     voyage: Optional[str]
     booking_reference: Optional[str]
@@ -42,8 +42,8 @@ class ShippingInstructionBase(BaseModel):
     port_of_discharge: Optional[str]
     etd_departure: Optional[date]
     eta_arrival: Optional[date]
-    vehicles: Optional[List[VehicleInfo]] = []
-    marks_numbers: Optional[List[MarksNumbers]] = []
+    vehicles: Optional[List[Dict[str, Any]]] = []
+    marks_numbers: Optional[List[Dict[str, Any]]] = []
     special_instructions: Optional[str]
     dangerous_goods: Optional[bool] = False
     temperature_control: Optional[str]
@@ -52,7 +52,28 @@ class ShippingInstructionBase(BaseModel):
 class ShippingInstructionCreate(ShippingInstructionBase):
     pass
 
+class ShippingInstructionUpdate(BaseModel):
+    type_of_bill_of_lading: Optional[str] = None
+    shipper: Optional[Dict[str, Any]] = None
+    consignee: Optional[Dict[str, Any]] = None
+    notify: Optional[Dict[str, Any]] = None
+    vessel: Optional[str] = None
+    voyage: Optional[str] = None
+    booking_reference: Optional[str] = None
+    bill_of_lading_no: Optional[str] = None
+    port_of_load: Optional[str] = None
+    port_of_discharge: Optional[str] = None
+    etd_departure: Optional[date] = None
+    eta_arrival: Optional[date] = None
+    vehicles: Optional[List[Dict[str, Any]]] = None
+    marks_numbers: Optional[List[Dict[str, Any]]] = None
+    special_instructions: Optional[str] = None
+    dangerous_goods: Optional[bool] = None
+    temperature_control: Optional[str] = None
+    humidity_control: Optional[str] = None
+
 class ShippingInstructionRead(ShippingInstructionBase):
     id: int
+
     class Config:
         orm_mode = True

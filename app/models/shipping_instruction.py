@@ -1,4 +1,3 @@
-# app/models/shipping_instruction.py
 from sqlalchemy import Column, Integer, String, Boolean, Date, JSON
 from app.core.database import Base
 

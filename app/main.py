@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.api.v1 import invoices, booking_requests, booking_confirmations, clients_info
+from app.api.v1 import invoices, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges
 
 
 # Create tables if not using Alembic yet (safe when starting out)
@@ -25,6 +25,17 @@ app.include_router(
     prefix="/api/v1/client-info",
     tags=["Client Info"]
 )
+app.include_router(
+    shipping_instructions.router,
+    prefix="/api/v1/shipping-instructions",
+    tags=["Shipping Instructions"]
+)
+app.include_router(
+    charges.router,
+    prefix="/api/v1/charges",
+    tags=["Charges"]
+)
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
