@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.api.v1 import invoices, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges
+from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # Create tables if not using Alembic yet (safe when starting out)
@@ -11,8 +12,14 @@ from app.api.v1 import invoices, booking_requests, booking_confirmations, client
 app = FastAPI(title=settings.APP_NAME)
 
 # Routers
-app.include_router(invoices.router, prefix="/api/v1/invoices", tags=["invoices"])
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          # Frontend URLs allowed
+    allow_credentials=True,
+    allow_methods=["*"],            # GET, POST, PUT, DELETE, etc.
+    allow_headers=["*"],            # Authorization, Content-Type, etc.
+)
 app.include_router(booking_requests.router, prefix="/api/v1/booking-requests", tags=["Booking Requests"])
 app.include_router(
     booking_confirmations.router,
@@ -35,7 +42,11 @@ app.include_router(
     prefix="/api/v1/charges",
     tags=["Charges"]
 )
-
+app.include_router(
+    invoice_previews.router,
+    prefix="/api/v1/invoice-previews",
+    tags=["Invoice Previews"]
+)
 @app.get("/health")
 def health():
     return {"status": "ok"}

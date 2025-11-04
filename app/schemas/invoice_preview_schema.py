@@ -8,14 +8,12 @@ class InvoicePreviewBase(BaseModel):
     shipping_details: Optional[List[Dict[str, Any]]] = []
     container_details: Optional[List[Dict[str, Any]]] = []
     itemized_charges: Optional[List[Dict[str, Any]]] = []
-    totals: Optional[Dict[str, Any]]
+    totals: Optional[Dict[str, Any]] = None
 
 class InvoicePreviewCreate(InvoicePreviewBase):
-    """Schema used for creating a new invoice preview"""
     pass
 
 class InvoicePreviewUpdate(BaseModel):
-    """Schema used for updating an existing invoice preview"""
     bill_to: Optional[List[Dict[str, Any]]] = None
     invoice_info: Optional[List[Dict[str, Any]]] = None
     shipping_details: Optional[List[Dict[str, Any]]] = None

@@ -1,14 +1,17 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 from typing import List, Optional
 
 class ShippingLine(BaseModel):
     carrier: str
-    dateSent: Optional[str] = None
+    date_sent: Optional[str] = Field(None, alias="dateSent")
     method: Optional[str] = None
-    confirmationId: Optional[str] = None
+    confirmation_id: Optional[str] = Field(None, alias="confirmationId")
     status: Optional[str] = None
     freight: Optional[str] = None
+
+    class Config:
+        allow_population_by_field_name = True  # ✅ accepts both dateSent and date_sent
 
 class BookingRequestBase(BaseModel):
     requested_date: date
