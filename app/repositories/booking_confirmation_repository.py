@@ -12,11 +12,20 @@ class BookingConfirmationRepository:
         self.db.refresh(obj)
         return obj
 
-    def list(self) -> List[BookingConfirmation]:
-        return self.db.query(BookingConfirmation).order_by(BookingConfirmation.id.desc()).all()
+    def list_by_booking(self, booking_request_id: int) -> List[BookingConfirmation]:
+        return (
+            self.db.query(BookingConfirmation)
+            .filter(BookingConfirmation.booking_request_id == booking_request_id)
+            .order_by(BookingConfirmation.id.desc())
+            .all()
+        )
 
-    def get(self, booking_id: int) -> Optional[BookingConfirmation]:
-        return self.db.query(BookingConfirmation).filter(BookingConfirmation.id == booking_id).first()
+    def get(self, confirmation_id: int) -> Optional[BookingConfirmation]:
+        return (
+            self.db.query(BookingConfirmation)
+            .filter(BookingConfirmation.id == confirmation_id)
+            .first()
+        )
 
     def update(self, db_obj: BookingConfirmation, **changes) -> BookingConfirmation:
         for k, v in changes.items():

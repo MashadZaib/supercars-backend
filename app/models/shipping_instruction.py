@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Boolean, Date, JSON
+from sqlalchemy import Column, Integer, String, Boolean, Date, JSON, ForeignKey
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class ShippingInstruction(Base):
@@ -23,3 +24,5 @@ class ShippingInstruction(Base):
     dangerous_goods = Column(Boolean, default=False)
     temperature_control = Column(String(50))
     humidity_control = Column(String(50))
+    booking_request_id = Column(Integer, ForeignKey("booking_requests.id", ondelete="CASCADE"))
+    booking_request = relationship("BookingRequest", back_populates="shipping_instructions")

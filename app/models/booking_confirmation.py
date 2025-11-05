@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class BookingConfirmation(Base):
     __tablename__ = "booking_confirmations"
@@ -20,3 +21,7 @@ class BookingConfirmation(Base):
     cy_cfs = Column(String(100))
     hs_code = Column(String(50))
     cargo_description = Column(String(255))
+    booking_request_id = Column(Integer, ForeignKey("booking_requests.id", ondelete="CASCADE"))
+
+    # ✅ Relationship back to BookingRequest
+    booking_request = relationship("BookingRequest", back_populates="confirmations")

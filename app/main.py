@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges
+from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges, booking_parties
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -46,6 +46,11 @@ app.include_router(
     invoice_previews.router,
     prefix="/api/v1/invoice-previews",
     tags=["Invoice Previews"]
+)
+app.include_router(
+    booking_parties.router,
+    prefix="/api/v1/booking-parties",
+    tags=["Booking Parties"]
 )
 @app.get("/health")
 def health():

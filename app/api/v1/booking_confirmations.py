@@ -5,7 +5,7 @@ from app.core.dependencies import db_session
 from app.schemas.booking_confirmation_schema import (
     BookingConfirmationCreate,
     BookingConfirmationRead,
-    BookingConfirmationUpdate
+    BookingConfirmationUpdate,
 )
 from app.services.booking_confirmation_service import BookingConfirmationService
 
@@ -15,9 +15,9 @@ router = APIRouter()
 def create_confirmation(payload: BookingConfirmationCreate, db: Session = Depends(db_session)):
     return BookingConfirmationService(db).create_confirmation(payload)
 
-@router.get("/", response_model=List[BookingConfirmationRead])
-def list_confirmations(db: Session = Depends(db_session)):
-    return BookingConfirmationService(db).list_confirmations()
+@router.get("/by-booking/{booking_request_id}", response_model=List[BookingConfirmationRead])
+def list_by_booking(booking_request_id: int, db: Session = Depends(db_session)):
+    return BookingConfirmationService(db).list_by_booking(booking_request_id)
 
 @router.get("/{confirmation_id}", response_model=BookingConfirmationRead)
 def get_confirmation(confirmation_id: int, db: Session = Depends(db_session)):

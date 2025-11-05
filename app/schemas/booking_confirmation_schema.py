@@ -1,8 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 from typing import Optional
 
 class BookingConfirmationBase(BaseModel):
+    booking_request_id: int = Field(..., description="Linked Booking Request ID")
     carrier_name: str
     rates_confirmed: Optional[str] = None
     booking_confirmation_no: str
@@ -20,11 +21,9 @@ class BookingConfirmationBase(BaseModel):
     cargo_description: Optional[str] = None
 
 class BookingConfirmationCreate(BookingConfirmationBase):
-    """Used for creating a new booking confirmation"""
     pass
 
 class BookingConfirmationUpdate(BaseModel):
-    """Used for updating a booking confirmation"""
     carrier_name: Optional[str] = None
     rates_confirmed: Optional[str] = None
     booking_confirmation_no: Optional[str] = None

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, JSON, DateTime, func
+from sqlalchemy import Column, Integer, JSON, DateTime, func, ForeignKey
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -16,3 +16,5 @@ class InvoicePreview(Base):
 
     # optional link to charges
     charges = relationship("Charge", back_populates="invoice_preview", cascade="all, delete-orphan")
+    booking_request_id = Column(Integer, ForeignKey("booking_requests.id", ondelete="CASCADE"))
+    booking_request = relationship("BookingRequest", back_populates="invoice_previews")

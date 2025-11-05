@@ -12,20 +12,20 @@ class BookingConfirmationService:
         obj = BookingConfirmation(**payload.dict())
         return self.repo.create(obj)
 
-    def list_confirmations(self) -> List[BookingConfirmation]:
-        return self.repo.list()
+    def list_by_booking(self, booking_request_id: int) -> List[BookingConfirmation]:
+        return self.repo.list_by_booking(booking_request_id)
 
-    def get_confirmation(self, booking_id: int) -> Optional[BookingConfirmation]:
-        return self.repo.get(booking_id)
+    def get_confirmation(self, confirmation_id: int) -> Optional[BookingConfirmation]:
+        return self.repo.get(confirmation_id)
 
-    def update_confirmation(self, booking_id: int, payload: BookingConfirmationUpdate) -> Optional[BookingConfirmation]:
-        obj = self.repo.get(booking_id)
+    def update_confirmation(self, confirmation_id: int, payload: BookingConfirmationUpdate) -> Optional[BookingConfirmation]:
+        obj = self.repo.get(confirmation_id)
         if not obj:
             return None
         return self.repo.update(obj, **payload.dict(exclude_unset=True))
 
-    def delete_confirmation(self, booking_id: int) -> bool:
-        obj = self.repo.get(booking_id)
+    def delete_confirmation(self, confirmation_id: int) -> bool:
+        obj = self.repo.get(confirmation_id)
         if not obj:
             return False
         self.repo.delete(obj)

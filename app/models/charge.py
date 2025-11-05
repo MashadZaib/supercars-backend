@@ -16,3 +16,5 @@ class Charge(Base):
     notes = Column(String(500), nullable=True)
 
     invoice_preview = relationship("InvoicePreview", back_populates="charges")
+    booking_request_id = Column(Integer, ForeignKey("booking_requests.id", ondelete="CASCADE"))
+    booking_request = relationship("BookingRequest", back_populates="charges")
