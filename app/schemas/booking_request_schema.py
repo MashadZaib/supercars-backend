@@ -4,23 +4,20 @@ from typing import List, Optional
 
 class ShippingLine(BaseModel):
     carrier: str
-    date_sent: Optional[str] = Field(None, alias="dateSent")
+    date_sent: Optional[str] = None
     method: Optional[str] = None
-    confirmation_id: Optional[str] = Field(None, alias="confirmationId")
+    confirmation_id: Optional[str] = None
     status: Optional[str] = None
     freight: Optional[str] = None
-
-    class Config:
-        allow_population_by_field_name = True  # ✅ accepts both dateSent and date_sent
 
 class BookingRequestBase(BaseModel):
     requested_date: date
     type_of_request: str
-    booking_party: str
+    booking_party_id: int  # ✅ No alias - use snake_case
     user_id: str
-    port_of_load: str
-    port_of_discharge: str
-    cargo_type: Optional[str] = None
+    port_of_load_id: int  # ✅ No alias - use snake_case
+    port_of_discharge_id: int  # ✅ No alias - use snake_case
+    cargo_type_id: Optional[int] = None  # ✅ No alias - use snake_case
     container_size: Optional[str] = None
     quantity: Optional[str] = None
     hs_code: Optional[str] = None
@@ -35,15 +32,15 @@ class BookingRequestCreate(BookingRequestBase):
 class BookingRequestUpdate(BaseModel):
     """Schema used for updating existing booking requests"""
     requested_date: Optional[date] = None
-    type_of_request: Optional[str] = None
-    booking_party: Optional[str] = None
-    user_id: Optional[str] = None
-    port_of_load: Optional[str] = None
-    port_of_discharge: Optional[str] = None
-    cargo_type: Optional[str] = None
-    container_size: Optional[str] = None
+    type_of_request_id: Optional[int] = None
+    booking_party_id: Optional[int] = None
+    user_id: Optional[int] = None
+    port_of_load_id: Optional[int] = None
+    port_of_discharge_id: Optional[int] = None
+    cargo_type_id: Optional[int] = None
+    container_size_id: Optional[int] = None
     quantity: Optional[str] = None
-    hs_code: Optional[str] = None
+    hs_code_id: Optional[int] = None
     weight_kg: Optional[str] = None
     commodity: Optional[str] = None
     shipping_lines: Optional[List[ShippingLine]] = []

@@ -6,3 +6,10 @@ from .booking_request import BookingRequest
 from .booking_confirmation import BookingConfirmation
 from .shipping_instruction import ShippingInstruction
 from .invoice_preview import InvoicePreview
+from .booking_party import BookingParty
+from .port import Port
+from .cargo_type import CargoType
+from .container_size import ContainerSize
+from .hs_code import HsCode
+from .user import User
+from .request_type import RequestType

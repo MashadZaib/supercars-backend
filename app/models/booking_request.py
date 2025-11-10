@@ -1,25 +1,37 @@
-# app/models/booking_request.py
-from sqlalchemy import Column, Integer, String, Date, JSON
-from app.core.database import Base
+from sqlalchemy import Column, Integer, String, Date, JSON, ForeignKey
 from sqlalchemy.orm import relationship
+from app.core.database import Base
 
 class BookingRequest(Base):
     __tablename__ = "booking_requests"
 
     id = Column(Integer, primary_key=True, index=True)
     requested_date = Column(Date, nullable=False)
-    type_of_request = Column(String(50), nullable=False)
-    booking_party = Column(String(255), nullable=False)
-    user_id = Column(String(100), nullable=False)
-    port_of_load = Column(String(100), nullable=False)
-    port_of_discharge = Column(String(100), nullable=False)
-    cargo_type = Column(String(100))
-    container_size = Column(String(50))
+
+    # Foreign Keys
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    type_of_request_id = Column(Integer, ForeignKey("request_types.id"), nullable=False)
+    booking_party_id = Column(Integer, ForeignKey("booking_parties.id"), nullable=False)
+    port_of_load_id = Column(Integer, ForeignKey("ports.id"), nullable=False)
+    port_of_discharge_id = Column(Integer, ForeignKey("ports.id"), nullable=False)
+    cargo_type_id = Column(Integer, ForeignKey("cargo_types.id"), nullable=True)
+    container_size_id = Column(Integer, ForeignKey("container_sizes.id"), nullable=True)
+    hs_code_id = Column(Integer, ForeignKey("hs_codes.id"), nullable=True)
+    # Relationships
+    request_type = relationship("RequestType")
+    user = relationship("User")
+    booking_party = relationship("BookingParty", back_populates="booking_requests")
+    port_of_load = relationship("Port", foreign_keys=[port_of_load_id])
+    port_of_discharge = relationship("Port", foreign_keys=[port_of_discharge_id])
+    cargo_type = relationship("CargoType")
+    container_size = relationship("ContainerSize")
+    hs_code = relationship("HsCode")
     quantity = Column(String(50))
-    hs_code = Column(String(50))
     weight_kg = Column(String(50))
     commodity = Column(String(255))
     shipping_lines = Column(JSON, nullable=True)
+
+    # Relationships with other models
     confirmations = relationship("BookingConfirmation", back_populates="booking_request", cascade="all, delete")
     client_info = relationship("ClientInfo", back_populates="booking_request", cascade="all, delete")
     shipping_instructions = relationship("ShippingInstruction", back_populates="booking_request", cascade="all, delete")
