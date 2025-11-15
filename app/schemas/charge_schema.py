@@ -1,7 +1,8 @@
-from pydantic import BaseModel, condecimal
+from pydantic import BaseModel, condecimal, Field
 from typing import Optional
 
 class ChargeBase(BaseModel):
+    booking_request_id: int = Field(..., description="Linked Booking Request ID")
     charge_name: str
     currency: str = "USD"
     amount: condecimal(max_digits=10, decimal_places=2)

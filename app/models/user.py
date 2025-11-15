@@ -6,6 +6,8 @@ class RoleEnum(enum.Enum):
     admin = "admin"
     user = "user"
     manager = "manager"
+    shipper = "shipper"
+    client = "client"
 
 class User(Base):
     __tablename__ = "users"
@@ -15,3 +17,4 @@ class User(Base):
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
     role = Column(Enum(RoleEnum), nullable=False, default=RoleEnum.user)
+    address = Column(String(255), nullable=True)

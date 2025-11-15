@@ -6,7 +6,9 @@ class ClientInfo(Base):
     __tablename__ = "client_info"
 
     id = Column(Integer, primary_key=True, index=True)
-    company_name = Column(String(255), nullable=False)
+    company_registration_no = Column(String(255), nullable=True)
+    tax_id = Column(String(255), nullable=True)
+    company_vat_no = Column(String(255), nullable=True)
     contact_person = Column(String(255))
     email = Column(String(255))
     phone = Column(String(50))

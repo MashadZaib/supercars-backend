@@ -12,4 +12,7 @@ from .cargo_type import CargoType
 from .container_size import ContainerSize
 from .hs_code import HsCode
 from .user import User
+from .cargo_description import CargoDescription
+from .carrier_info import CarrierInfo
+from .vessel_info import VesselInfo
 from .request_type import RequestType

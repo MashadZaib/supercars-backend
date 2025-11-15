@@ -1,8 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
 class InvoicePreviewBase(BaseModel):
+    booking_request_id: int = Field(..., description="Linked Booking Request ID")
     bill_to: List[Dict[str, Any]]
     invoice_info: List[Dict[str, Any]]
     shipping_details: Optional[List[Dict[str, Any]]] = []
