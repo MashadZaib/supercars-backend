@@ -15,5 +15,5 @@ class CargoTypeService:
             )
         return self.repo.create(payload.dict())
 
-    def get_booking_parties(self, search: str = None):
+    def get_cargo_types(self, search: str = None):
         return self.repo.get_all(search)

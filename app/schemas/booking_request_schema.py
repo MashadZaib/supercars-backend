@@ -12,16 +12,16 @@ class ShippingLine(BaseModel):
 
 class BookingRequestBase(BaseModel):
     requested_date: date
-    type_of_request: str
+    type_of_request_id: int
     booking_party_id: int  # ✅ No alias - use snake_case
-    user_id: str
+    user_id: int
     port_of_load_id: int  # ✅ No alias - use snake_case
     port_of_discharge_id: int  # ✅ No alias - use snake_case
     cargo_type_id: Optional[int] = None  # ✅ No alias - use snake_case
-    container_size: Optional[str] = None
-    quantity: Optional[str] = None
-    hs_code: Optional[str] = None
-    weight_kg: Optional[str] = None
+    container_size_id: int = None
+    quantity: Optional[int] = None
+    hs_code_id: int = None
+    weight_kg: Optional[int] = None
     commodity: Optional[str] = None
     shipping_lines: Optional[List[ShippingLine]] = []
 
@@ -49,4 +49,4 @@ class BookingRequestRead(BookingRequestBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

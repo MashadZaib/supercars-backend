@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.dependencies import db_session
-from app.schemas.hs_code_schema import HsCodeCreate, HsCodeRead, HsCodeUpdate
+from app.schemas.hs_code_schema import HsCodeCreate, HsCodeRead
 from app.services.hs_code_service import HsCodeService
 
 router = APIRouter()
@@ -25,18 +25,3 @@ def get_hs_code(hs_code_id: int, db: Session = Depends(db_session)):
         raise HTTPException(status_code=404, detail="HS Code not found")
     return hs_obj
 
-
-@router.put("/{hs_code_id}", response_model=HsCodeRead)
-def update_hs_code(hs_code_id: int, payload: HsCodeUpdate, db: Session = Depends(db_session)):
-    updated = HsCodeService(db).update_hs_code(hs_code_id, payload)
-    if not updated:
-        raise HTTPException(status_code=404, detail="HS Code not found")
-    return updated
-
-
-@router.delete("/{hs_code_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_hs_code(hs_code_id: int, db: Session = Depends(db_session)):
-    ok = HsCodeService(db).delete_hs_code(hs_code_id)
-    if not ok:
-        raise HTTPException(status_code=404, detail="HS Code not found")
-    return None

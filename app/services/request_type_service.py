@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from app.repositories.port_repository import RequestTypeRepository
+from app.repositories.request_type_repository import RequestTypeRepository
 from app.schemas.request_type import RequestTypeCreate
 
 class RequestTypeService:
@@ -15,5 +15,5 @@ class RequestTypeService:
             )
         return self.repo.create(payload.dict())
 
-    def get_request_types(self, search: str = None):
-        return self.repo.get_all(search)
+    def get_request_types(self):
+        return self.repo.get_all()
