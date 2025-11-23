@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges, booking_parties, cargo_types, ports, users,hs_codes, cargo_descriptions, request_types, container_sizes, carrier_info
+from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges, booking_parties, cargo_types, ports, users,hs_codes, cargo_descriptions, request_types, container_sizes, carrier_info, vessel_info
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -94,6 +94,11 @@ app.include_router(
     carrier_info.router,
     prefix="/api/v1/carriers",
     tags=["Carrier Info"]
+)
+app.include_router(
+    vessel_info.router,
+    prefix="/api/v1/vessels",
+    tags=["Vessel Info"]    
 )
 @app.get("/health")
 def health():
