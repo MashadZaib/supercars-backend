@@ -4,12 +4,14 @@ from app.models.client_info import ClientInfo
 from app.repositories.client_info_repository import ClientInfoRepository
 from app.schemas.client_info_schema import ClientInfoCreate, ClientInfoUpdate
 
+
 class ClientInfoService:
     def __init__(self, db: Session):
         self.repo = ClientInfoRepository(db)
 
     def create_client(self, payload: ClientInfoCreate) -> ClientInfo:
-        obj = ClientInfo(**payload.dict())
+        data = payload.dict(exclude_unset=True)
+        obj = ClientInfo(**data)
         return self.repo.create(obj)
 
     def list_clients(self) -> List[ClientInfo]:
@@ -22,11 +24,14 @@ class ClientInfoService:
         obj = self.repo.get(client_id)
         if not obj:
             return None
-        return self.repo.update(obj, **payload.dict(exclude_unset=True))
+
+        update_data = payload.dict(exclude_unset=True)
+        return self.repo.update(obj, **update_data)
 
     def delete_client(self, client_id: int) -> bool:
         obj = self.repo.get(client_id)
         if not obj:
             return False
+
         self.repo.delete(obj)
         return True

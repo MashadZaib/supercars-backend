@@ -16,3 +16,4 @@ from .cargo_description import CargoDescription
 from .carrier_info import CarrierInfo
 from .vessel_info import VesselInfo
 from .request_type import RequestType
+from .booking_request_client_info import BookingRequestClientInfo

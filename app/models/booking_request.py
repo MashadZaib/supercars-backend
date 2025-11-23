@@ -1,12 +1,12 @@
 from sqlalchemy import Column, Integer, String, Date, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from app.core.database import Base
-
+from datetime import date
 class BookingRequest(Base):
     __tablename__ = "booking_requests"
 
     id = Column(Integer, primary_key=True, index=True)
-    requested_date = Column(Date, nullable=False)
+    requested_date = Column(Date, nullable=False, default=date.today)
 
     # Foreign Keys
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -33,7 +33,12 @@ class BookingRequest(Base):
 
     # Relationships with other models
     confirmations = relationship("BookingConfirmation", back_populates="booking_request", cascade="all, delete")
-    client_info = relationship("ClientInfo", back_populates="booking_request", cascade="all, delete")
+    client_infos = relationship(
+        "BookingRequestClientInfo",
+        back_populates="booking_request",
+        cascade="all, delete-orphan"
+    )
     shipping_instructions = relationship("ShippingInstruction", back_populates="booking_request", cascade="all, delete")
     charges = relationship("Charge", back_populates="booking_request", cascade="all, delete")
     invoice_previews = relationship("InvoicePreview", back_populates="booking_request", cascade="all, delete")
+    

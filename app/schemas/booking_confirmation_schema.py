@@ -14,8 +14,8 @@ class BookingConfirmationBase(BaseModel):
     vessel_id: Optional[int] = None
     voyage: Optional[str] = None
     container_size_id: Optional[int] = None
-    quantity: Optional[str] = None
-    weight_kg: Optional[str] = None
+    quantity: Optional[int] = None
+    weight_kg: Optional[int] = None
     cy_cfs: Optional[str] = None
     hs_code_id: Optional[int] = None
     cargo_description_id: Optional[int] = None

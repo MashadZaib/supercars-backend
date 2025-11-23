@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+
 from app.core.dependencies import db_session
 from app.schemas.client_info_schema import (
     ClientInfoCreate,
