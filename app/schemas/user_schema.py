@@ -8,6 +8,9 @@ class UserBase(BaseModel):
     email: EmailStr
     role: RoleEnum
     address: Optional[str] = None
+    phone: Optional[str] = None
+    contact_person: Optional[str] = None
+
 
 
 class UserCreate(UserBase):
@@ -20,6 +23,8 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     role: Optional[RoleEnum] = None
     address: Optional[str] = None
+    phone: Optional[str] = None
+    contact_person: Optional[str] = None
 
 
 class UserRead(UserBase):

@@ -1,4 +1,5 @@
 from sqlalchemy import Enum, Column, Integer, ForeignKey, Date
+from sqlalchemy.orm import relationship
 from app.models.enums import MethodEnum
 from app.core.database import Base
 import enum
@@ -19,3 +20,5 @@ class BookingRequestClientInfo(Base):
         nullable=False,
         default=MethodEnum.email,
     )
+    booking_request = relationship("BookingRequest", back_populates="client_infos")
+    client_info = relationship("ClientInfo", back_populates="booking_requests")

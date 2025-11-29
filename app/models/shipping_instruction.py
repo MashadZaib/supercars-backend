@@ -1,13 +1,13 @@
 from sqlalchemy import Column, Integer, String, Boolean, Date, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from app.core.database import Base
-
+from typing import Optional
 class ShippingInstruction(Base):
     __tablename__ = "shipping_instructions"
 
     id = Column(Integer, primary_key=True, index=True)
     type_of_bill_of_lading = Column(String(50))
-    shipper = Column(JSON)
+    shipper_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     consignee = Column(JSON)
     notify = Column(JSON)
     vessel = Column(String(255))
@@ -26,3 +26,4 @@ class ShippingInstruction(Base):
     humidity_control = Column(String(50))
     booking_request_id = Column(Integer, ForeignKey("booking_requests.id", ondelete="CASCADE"))
     booking_request = relationship("BookingRequest", back_populates="shipping_instructions")
+    user = relationship("User", foreign_keys=[shipper_id])

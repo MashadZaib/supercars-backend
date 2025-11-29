@@ -18,3 +18,5 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role = Column(Enum(RoleEnum), nullable=False, default=RoleEnum.user)
     address = Column(String(255), nullable=True)
+    phone = Column(String(50), nullable=True)
+    contact_person = Column(String(50), nullable=True)

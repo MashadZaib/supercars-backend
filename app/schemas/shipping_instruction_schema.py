@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import date
 from typing import List, Optional, Dict, Any
 
@@ -30,8 +30,9 @@ class MarksNumbers(BaseModel):
     cargo_weight: Optional[str]
 
 class ShippingInstructionBase(BaseModel):
+    booking_request_id: int = Field(..., description="Linked Booking Request ID")
     type_of_bill_of_lading: Optional[str]
-    shipper: Optional[Dict[str, Any]] = None
+    shipper_id: Optional[int] = None
     consignee: Optional[Dict[str, Any]] = None
     notify: Optional[Dict[str, Any]] = None
     vessel: Optional[str]
@@ -54,7 +55,7 @@ class ShippingInstructionCreate(ShippingInstructionBase):
 
 class ShippingInstructionUpdate(BaseModel):
     type_of_bill_of_lading: Optional[str] = None
-    shipper: Optional[Dict[str, Any]] = None
+    shipper_id: Optional[int] = None
     consignee: Optional[Dict[str, Any]] = None
     notify: Optional[Dict[str, Any]] = None
     vessel: Optional[str] = None
