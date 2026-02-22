@@ -1,116 +1,65 @@
-from fastapi import FastAPI
-from app.core.config import settings
-from app.core.database import Base, engine
-from app.api.v1 import invoice_previews, booking_requests, booking_confirmations, clients_info, shipping_instructions, charges, booking_parties, cargo_types, ports, users,hs_codes, cargo_descriptions, request_types, container_sizes, carrier_info, vessel_info, booking_request_client_info
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from . import models, schemas, crud, auth
+from .database import engine, get_db, Base
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+from sqlalchemy.orm import Session
 
+# create tables
+Base.metadata.create_all(bind=engine)
 
-# Create tables if not using Alembic yet (safe when starting out)
-# Comment out in production and use Alembic migrations instead.
-# Base.metadata.create_all(bind=engine)
+app = FastAPI(title='Carizo Backend')
 
-app = FastAPI(title=settings.APP_NAME)
-
-# Routers
+# Allow the frontend dev server to call the API during development.
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # Frontend URLs allowed
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],            # GET, POST, PUT, DELETE, etc.
-    allow_headers=["*"],            # Authorization, Content-Type, etc.
-)
-app.include_router(booking_requests.router, prefix="/api/v1/booking-requests", tags=["Booking Requests"])
-app.include_router(
-    booking_confirmations.router,
-    prefix="/api/v1/booking-confirmations",
-    tags=["Booking Confirmations"]
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-app.include_router(
-    clients_info.router,
-    prefix="/api/v1/client-info",
-    tags=["Client Info"]
-)
-app.include_router(
-    shipping_instructions.router,
-    prefix="/api/v1/shipping-instructions",
-    tags=["Shipping Instructions"]
-)
-app.include_router(
-    charges.router,
-    prefix="/api/v1/charges",
-    tags=["Charges"]
-)
-app.include_router(
-    invoice_previews.router,
-    prefix="/api/v1/invoice-previews",
-    tags=["Invoice Previews"]
-)
-app.include_router(
-    booking_parties.router,
-    prefix="/api/v1/booking-parties",
-    tags=["Booking Parties"]
-)
-app.include_router(
-    ports.router,
-    prefix="/api/v1/ports",
-    tags=["Ports"]
-)
+@app.post('/api/auth/signup', response_model=schemas.UserOut)
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    existing = crud.get_user_by_username(db, user.username) or crud.get_user_by_email(db, user.email)
+    if existing:
+        raise HTTPException(status_code=400, detail='User with that username or email already exists')
+    created = crud.create_user(db, user)
+    return created
 
-app.include_router(
-    users.router,
-    prefix="/api/v1/users",
-    tags=["Users"]
-)
-app.include_router(
-    cargo_types.router,
-    prefix="/api/v1/cargo-types",
-    tags=["Cargo Types"]
-)
+@app.post('/api/auth/token', response_model=schemas.Token)
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = crud.authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password', headers={'WWW-Authenticate': 'Bearer'})
+    access_token = auth.create_access_token(data={'sub': user.username})
+    return {'access_token': access_token, 'token_type': 'bearer'}
 
-app.include_router(
-    hs_codes.router,
-    prefix="/api/v1/hs-codes",
-    tags=["HS Codes"]
-)
+@app.get('/api/users/me', response_model=schemas.UserOut)
+async def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
+    return current_user
 
-app.include_router(
-    cargo_descriptions.router,
-    prefix="/api/v1/cargo-descriptions",
-    tags=["Cargo Descriptions"]
-)
-app.include_router(
-    request_types.router,
-    prefix="/api/v1/request-types",
-    tags=["Request Types"]
-)
-app.include_router(
-    container_sizes.router,
-    prefix="/api/v1/container-sizes",
-    tags=["Container Sizes"]
-)
-app.include_router(
-    carrier_info.router,
-    prefix="/api/v1/carriers",
-    tags=["Carrier Info"]
-)
-app.include_router(
-    vessel_info.router,
-    prefix="/api/v1/vessels",
-    tags=["Vessel Info"]    
-)
-app.include_router(
-    vessel_info.router,
-    prefix="/api/v1/vessels",
-    tags=["Vessel Info"]    
-)
-app.include_router(
-    booking_request_client_info.router,
-    prefix="/api/v1/booking-request-client-info",
-    tags=["Booking Request Clients"]
-)
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+@app.post('/api/bookings', response_model=schemas.BookingOut)
+def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    return crud.create_booking(db, booking)
+
+
+@app.get('/api/bookings', response_model=List[schemas.BookingOut])
+def list_bookings(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    return crud.get_bookings(db, skip, limit)
+
+
+@app.get('/api/bookings/{booking_id}', response_model=schemas.BookingOut)
+def get_booking(booking_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    b = crud.get_booking(db, booking_id)
+    if not b:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return b

@@ -1,51 +1,42 @@
-# Super Cars Backend (FastAPI + SQLAlchemy + PostgreSQL)
+# backend-carizo
 
-A layered architecture backend for the Super Cars invoicing system.
+FastAPI backend for Carizo (auth + users) using PostgreSQL and JWT.
 
-## Structure
-- **API layer:** `app/api/v1`
-- **Service layer:** `app/services`
-- **Repository layer:** `app/repositories`
-- **DB model layer:** `app/models`
-- **Schemas (Pydantic):** `app/schemas`
-- **Core (config/db/deps):** `app/core`
+Quick start
 
-## Getting Started
+1. Create a Python virtualenv and install dependencies:
 
-### 1) Create & activate virtualenv
 ```bash
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/Mac:
 source .venv/bin/activate
-```
-
-### 2) Install deps
-```bash
 pip install -r requirements.txt
 ```
 
-### 3) Configure environment
-Copy `.env.example` to `.env` and update `DATABASE_URL`:
-```
-DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/supercars
-```
+2. Set environment variables (example using .env or export):
 
-### 4) Run migrations (Alembic)
 ```bash
-alembic upgrade head
+export DATABASE_URL=postgresql://postgres:password@localhost:5432/carizo_db
+export SECRET_KEY="a-very-secret-key"
+export ACCESS_TOKEN_EXPIRE_MINUTES=60
 ```
 
-### 5) Start server
+3. Run the app:
+
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Open: http://127.0.0.1:8000/docs
+4. Create test users (optional, for login testing):
 
-## Alembic Notes
-- Autogenerate migrations when you change models:
 ```bash
-alembic revision --autogenerate -m "init"
-alembic upgrade head
+python scripts/create_admins.py
 ```
+
+This creates a **dummy test user** (username: **test**, password: **test**) and admin users (admin1..admin5, password: Password123!).
+
+5. Open docs at http://localhost:8000/docs
+
+Notes
+- The app will create tables automatically on startup with SQLAlchemy's create_all (use migrations for production).
+- This provides basic signup/login/token functionality for JWT-based authentication.
+- For production, use a real secret key and HTTPS; do not use create_all in production — use Alembic migrations.
