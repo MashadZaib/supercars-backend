@@ -63,3 +63,43 @@ def get_booking(booking_id: int, db: Session = Depends(get_db), current_user: mo
     if not b:
         raise HTTPException(status_code=404, detail='Booking not found')
     return b
+
+
+@app.put('/api/bookings/{booking_id}', response_model=schemas.BookingOut)
+def update_booking(booking_id: int, booking: schemas.BookingUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    updated = crud.update_booking(db, booking_id, booking)
+    if not updated:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return updated
+
+
+@app.delete('/api/bookings/{booking_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_booking(booking_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    ok = crud.delete_booking(db, booking_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return None
+
+
+@app.get('/api/bookings/key/{external_id}', response_model=schemas.BookingOut)
+def get_booking_by_key(external_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    b = crud.get_booking_by_external_id(db, external_id)
+    if not b:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return b
+
+
+@app.put('/api/bookings/key/{external_id}', response_model=schemas.BookingOut)
+def update_booking_by_key(external_id: str, booking: schemas.BookingUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    updated = crud.update_booking_by_external_id(db, external_id, booking)
+    if not updated:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return updated
+
+
+@app.delete('/api/bookings/key/{external_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_booking_by_key(external_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    ok = crud.delete_booking_by_external_id(db, external_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Booking not found')
+    return None

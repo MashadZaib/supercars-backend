@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 from passlib.context import CryptContext
 from typing import List
+import uuid
 
 # Use sha256_crypt to avoid native bcrypt build/runtime issues in some dev
 # environments. In production you can switch back to bcrypt if desired.
@@ -35,6 +36,8 @@ def authenticate_user(db: Session, username: str, password: str):
 
 def create_booking(db: Session, booking: schemas.BookingCreate):
     data = booking.dict(exclude_unset=True)
+    if not data.get("external_id"):
+        data["external_id"] = uuid.uuid4().hex
     db_obj = models.Booking(**data)
     db.add(db_obj)
     db.commit()
@@ -44,6 +47,10 @@ def create_booking(db: Session, booking: schemas.BookingCreate):
 
 def get_booking(db: Session, booking_id: int):
     return db.query(models.Booking).filter(models.Booking.id == booking_id).first()
+
+
+def get_booking_by_external_id(db: Session, external_id: str):
+    return db.query(models.Booking).filter(models.Booking.external_id == external_id).first()
 
 
 def get_bookings(db: Session, skip: int = 0, limit: int = 100) -> List[models.Booking]:
@@ -62,3 +69,35 @@ def update_booking(db: Session, booking_id: int, booking: schemas.BookingUpdate)
     db.commit()
     db.refresh(db_obj)
     return db_obj
+
+
+def update_booking_by_external_id(db: Session, external_id: str, booking: schemas.BookingUpdate):
+    db_obj = get_booking_by_external_id(db, external_id)
+    if not db_obj:
+        return None
+    updates = booking.dict(exclude_unset=True)
+    for k, v in updates.items():
+        if hasattr(db_obj, k):
+            setattr(db_obj, k, v)
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+
+def delete_booking(db: Session, booking_id: int) -> bool:
+    db_obj = get_booking(db, booking_id)
+    if not db_obj:
+        return False
+    db.delete(db_obj)
+    db.commit()
+    return True
+
+
+def delete_booking_by_external_id(db: Session, external_id: str) -> bool:
+    db_obj = get_booking_by_external_id(db, external_id)
+    if not db_obj:
+        return False
+    db.delete(db_obj)
+    db.commit()
+    return True

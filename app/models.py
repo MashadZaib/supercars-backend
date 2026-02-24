@@ -15,6 +15,7 @@ class User(Base):
 class Booking(Base):
     __tablename__ = 'bookings'
     id = Column(Integer, primary_key=True, index=True)
+    external_id = Column(String(64), unique=True, index=True, nullable=True)
     # timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
